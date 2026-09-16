@@ -28,9 +28,9 @@ cask "thinkwatch-lite" do
   # Removing it here is what makes `brew install` a single step. Anyone who
   # would rather not delegate that can install by hand: the README has the
   # same command, to run themselves.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/ThinkWatch Lite.app"]
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args: ["-dr", "com.apple.quarantine", "{{appdir}}/ThinkWatch Lite.app"]
   end
 
   # Quit before replacing the bundle — `brew upgrade` removes the old app
