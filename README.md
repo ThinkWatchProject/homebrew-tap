@@ -22,8 +22,12 @@ downloads and will not open.
 
 ## Why the install removes a quarantine attribute
 
-The app is ad-hoc signed. It is not signed by a registered Apple developer,
-because that is a paid, renewed-yearly account and nobody has taken that on.
+The app is signed with the project's own self-signed certificate, not by a
+registered Apple developer — that is a paid, renewed-yearly account and nobody
+has taken it on. The certificate does not get the app past Gatekeeper. What it
+does is give every release the same signer, so `brew upgrade` can tell the new
+version comes from the same place as the old one and doesn't warn that the
+signer changed.
 
 macOS quarantines anything downloaded from the internet and refuses to open an
 app it cannot attribute to a registered developer. Since macOS 15 the

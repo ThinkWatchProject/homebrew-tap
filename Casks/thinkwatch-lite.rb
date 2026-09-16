@@ -20,7 +20,8 @@ cask "thinkwatch-lite" do
 
   app "ThinkWatch Lite.app"
 
-  # The build is ad-hoc signed, not signed by a registered Apple developer.
+  # The build is signed with the project's self-signed certificate, not by a
+  # registered Apple developer.
   # macOS quarantines anything downloaded and refuses to open it, and since
   # macOS 15 the Control-click bypass is gone — the only way through is
   # System Settings, per install, or removing the attribute.
