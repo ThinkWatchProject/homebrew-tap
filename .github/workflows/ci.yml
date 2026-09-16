@@ -38,4 +38,10 @@ jobs:
       # it. A cask whose sha256 does not match the file it points at is
       # indistinguishable from a correct one until someone installs it.
       - name: Audit
+        # Unauthenticated, brew gets the runner's shared 60-requests-an-hour
+        # slice of the GitHub API, which other jobs on the same address have
+        # usually spent already. The job's own token raises that, and it is
+        # already here — it needs no secret.
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
         run: brew audit --cask --online thinkwatchproject/tap/thinkwatch-lite
