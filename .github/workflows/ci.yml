@@ -31,6 +31,14 @@ jobs:
           rm -rf "$DEST"
           cp -R homebrew-tap "$DEST"
 
+      # Homebrew 6 ignores taps nobody has trusted — and "ignores" includes
+      # `brew style`, which then inspects nothing and passes. Trusting the
+      # whole tap is right here and only here: this job exists to check
+      # this tap's own code. Users trust only the cask, by installing it by
+      # its full name.
+      - name: Trust this tap
+        run: brew trust thinkwatchproject/tap
+
       - name: Style
         run: brew style thinkwatchproject/tap
 
