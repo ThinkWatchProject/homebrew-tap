@@ -9,11 +9,17 @@
 # repository: that would need a token with write access to this repo
 # stored over there, and a schedule needs no secret at all. Run it from
 # the Actions tab to pick up a release immediately.
+#
+# Hourly, because the app waits for this. An app installed with Homebrew
+# only offers an update once the cask here carries it — offering it
+# earlier hands the user a `brew upgrade` that has nothing to install.
+# Every hour this lags is an hour those users are a version behind
+# everyone else. A run with nothing to do finishes in seconds.
 name: Bump
 
 on:
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:

@@ -1,8 +1,8 @@
 cask "thinkwatch-lite" do
-  version "2026.9.1"
-  sha256 "a9db5604d83a2e36c03fc599e08bd1093028d527302319fe936872301e415bc0"
+  version "2026.9.2"
+  sha256 "bc47e27d63c8f2d15d4593c2db6cb6ae4ee902eae6ccf17b14fc596c73ce6f45"
 
-  url "https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/download/v#{version}/ThinkWatch-Lite-#{version}-arm64.zip"
+  url "https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/download/v#{version}/ThinkWatch-Lite-#{version}-arm64.dmg"
   name "ThinkWatch Lite"
   desc "Menu-bar app for a local AI API gateway"
   homepage "https://github.com/ThinkWatchProject/ThinkWatch-Lite"

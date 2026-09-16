@@ -35,7 +35,8 @@ Security › Open Anyway, once per install, or removing the attribute. The cask'
 xattr -dr com.apple.quarantine "/Applications/ThinkWatch Lite.app"
 ```
 
-That is the whole of what this tap does beyond unpacking a zip. If you would
+That is the whole of what this tap does beyond copying the app out of its disk
+image. If you would
 rather not delegate it, skip the cask: download the build from the
 [releases page](https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases),
 check its sha256 against the one published beside it, and run that command
@@ -54,8 +55,18 @@ brew update && brew upgrade --cask thinkwatch-lite
 An app installed this way does not update itself. Homebrew moves the app into
 `/Applications` and records the version it put there; an app that replaced its
 own bundle would leave that record pointing at a version that is no longer on
-disk, and the next `brew upgrade` would write the old one back over it. So when
-a new version exists, the app says so and leaves the upgrade to Homebrew.
+disk, and the next `brew upgrade` would write the old one back over it.
+
+So when a new version exists, the app opens a window with this command and a
+button to copy it. It checks this tap rather than the release page to decide:
+the window appears only once the cask here carries the new version, which the
+bump job picks up within the hour. Before that, the command would have nothing
+to install.
+
+`brew update` is part of the command because `brew upgrade` refreshes taps on
+its own at most once a day (`HOMEBREW_AUTO_UPDATE_SECS`); without it, a
+day-old copy of this tap would answer that the latest version is already
+installed.
 
 ## Uninstalling
 

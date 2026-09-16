@@ -3,7 +3,7 @@
 # Point the cask at the newest ThinkWatch Lite release.
 #
 # **The published `.sha256` file is not a verification.** It sits next to
-# the zip, on the same server, signed by nothing — whoever could replace
+# the disk image, on the same server, signed by nothing — whoever could replace
 # one could replace the other. It is there for people who download by
 # hand and want to check what they got.
 #
@@ -28,7 +28,7 @@ then
   exit 0
 fi
 
-ASSET="ThinkWatch-Lite-${VERSION}-arm64.zip"
+ASSET="ThinkWatch-Lite-${VERSION}-arm64.dmg"
 TMP=$(mktemp -d)
 # shellcheck disable=SC2064  # expand now: this is the directory to remove
 trap "rm -rf '${TMP}'" EXIT

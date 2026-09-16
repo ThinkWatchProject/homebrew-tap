@@ -33,7 +33,7 @@ macOS 会把从网上下载的东西标记为隔离，并拒绝打开一个无�
 xattr -dr com.apple.quarantine "/Applications/ThinkWatch Lite.app"
 ```
 
-除了解压，这个 tap 做的全部事情就是这一条。不想把这一步交出去的话，可以
+除了从磁盘映像里把应用拷出来，这个 tap 做的全部事情就是这一条。不想把这一步交出去的话，可以
 不用 cask：从
 [release 页面](https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases)
 下载，核对旁边那份 sha256，然后自己执行上面这条命令。
@@ -50,8 +50,16 @@ brew update && brew upgrade --cask thinkwatch-lite
 
 这样装的实例不会自己更新。Homebrew 把应用移进 `/Applications` 并记下它放
 进去的是哪一版；应用如果自己把包换掉，那条记录就指向一个已经不在磁盘上的
-版本，下一次 `brew upgrade` 会把旧的那版再盖回去。所以有新版本的时候，应用
-只负责告诉你，升级交给 Homebrew。
+版本，下一次 `brew upgrade` 会把旧的那版再盖回去。
+
+所以有新版本的时候，应用会弹出一个窗口，给出上面这条命令和复制按钮。它判断
+有没有新版本看的是这个 tap，不是 release 页面：只有这里的 cask 已经是新版本
+时才弹窗，而自动更新的任务一小时内就会跟上。在那之前给出这条命令，执行下去
+没有东西可装。
+
+命令里要先 `brew update`：`brew upgrade` 自己最多一天才刷新一次 tap
+（`HOMEBREW_AUTO_UPDATE_SECS`）；不刷新的话，一份一天前的 tap 会回答已经是
+最新版本。
 
 ## 卸载
 
