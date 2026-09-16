@@ -1,0 +1,45 @@
+# Follow ThinkWatch Lite's releases.
+#
+# A tap that has to be edited by hand after every release is a tap that
+# is a version behind most of the time. This checks for a newer release,
+# and if there is one, records the checksum of the file it actually
+# downloaded.
+#
+# It runs on a schedule rather than being pushed to from the app's
+# repository: that would need a token with write access to this repo
+# stored over there, and a schedule needs no secret at all. Run it from
+# the Actions tab to pick up a release immediately.
+name: Bump
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    name: Follow the newest release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Point the cask at the newest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/bump.sh
+
+      - name: Commit if it moved
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "Nothing moved."
+            exit 0
+          fi
+          VERSION=$(awk -F'"' '/^  version /{ print $2; exit }' Casks/thinkwatch-lite.rb)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "thinkwatch-lite $VERSION"
+          git push

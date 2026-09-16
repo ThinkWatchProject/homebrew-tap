@@ -1,0 +1,41 @@
+# Check the cask before it reaches anyone's machine.
+#
+# A tap has no compiler and no tests. What it has is a file that other
+# people's `brew install` reads — so the things worth checking are the
+# ones that make that command fail: a URL that 404s, a checksum that does
+# not match what is behind it, a stanza brew no longer accepts.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  cask:
+    name: Cask
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: homebrew-tap
+
+      # brew only audits casks it can resolve by name, and it resolves
+      # them out of its own Taps directory — so this checkout has to be
+      # put where brew looks, rather than audited in place.
+      - name: Put the checkout where brew looks for a tap
+        run: |
+          set -euo pipefail
+          DEST="$(brew --repository)/Library/Taps/thinkwatchproject/homebrew-tap"
+          mkdir -p "$(dirname "$DEST")"
+          rm -rf "$DEST"
+          cp -R homebrew-tap "$DEST"
+
+      - name: Style
+        run: brew style thinkwatchproject/tap
+
+      # `--online` is the point of this job: it fetches the URL and hashes
+      # it. A cask whose sha256 does not match the file it points at is
+      # indistinguishable from a correct one until someone installs it.
+      - name: Audit
+        run: brew audit --cask --online thinkwatchproject/tap/thinkwatch-lite
