@@ -5,16 +5,19 @@
 # and if there is one, records the checksum of the file it actually
 # downloaded.
 #
-# It runs on a schedule rather than being pushed to from the app's
-# repository: that would need a token with write access to this repo
-# stored over there, and a schedule needs no secret at all. Run it from
-# the Actions tab to pick up a release immediately.
+# **The release itself no longer waits for this schedule.** The app's
+# release pipeline pushes the cask as soon as a release is published,
+# using a deploy key that can write to this repository and nothing else,
+# and it runs this same `scripts/bump.sh` to decide what to write.
 #
-# Hourly, because the app waits for this. An app installed with Homebrew
-# only offers an update once the cask here carries it — offering it
-# earlier hands the user a `brew upgrade` that has nothing to install.
-# Every hour this lags is an hour those users are a version behind
-# everyone else. A run with nothing to do finishes in seconds.
+# The schedule stays as the fallback: a revoked key, a failed step or a
+# release published by hand all leave the cask behind, and the app waits
+# for it. An app installed with Homebrew only offers an update once the
+# cask here carries it — offering it earlier hands the user a `brew
+# upgrade` that has nothing to install. Hourly, because every hour this
+# lags is an hour those users are a version behind everyone else. A run
+# with nothing to do finishes in seconds. Run it from the Actions tab to
+# pick up a release immediately.
 name: Bump
 
 on:
