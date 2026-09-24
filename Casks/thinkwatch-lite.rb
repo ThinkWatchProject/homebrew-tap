@@ -5,7 +5,7 @@ cask "thinkwatch-lite" do
   url "https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/download/v#{version}/ThinkWatch-Lite-#{version}-arm64.dmg"
   name "ThinkWatch Lite"
   desc "Menu-bar app for a local AI API gateway"
-  homepage "https://github.com/ThinkWatchProject/ThinkWatch-Lite"
+  homepage "https://thinkwat.ch/lite/"
 
   livecheck do
     url :url
