@@ -1,88 +1,104 @@
-# ThinkWatch tap
-
-The Homebrew cask for [ThinkWatch Lite](https://github.com/ThinkWatchProject/ThinkWatch-Lite),
-a menu-bar app for a local AI API gateway.
+# ThinkWatch Homebrew tap
 
 **[English](README.md) | [中文](README.zh-CN.md)**
+
+The Homebrew cask for [ThinkWatch Lite](https://thinkwat.ch/lite/), the
+desktop app for a local AI API gateway. The cask installs the macOS build,
+which runs on Apple silicon with macOS 12 or later.
 
 ```bash
 brew install --cask thinkwatchproject/tap/thinkwatch-lite
 ```
 
-No `brew tap` first — the long name taps this repository on the way past.
+Installing by the full name taps this repository automatically; a separate
+`brew tap` is not required.
 
-## What gets installed
+The Windows and Linux builds, and the disk image for a manual installation on
+macOS, are available on the [ThinkWatch Lite page](https://thinkwat.ch/lite/#install)
+and on the [releases page](https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/latest).
 
-One thing: `ThinkWatch Lite.app` in `/Applications`. The gateway binary is
-inside the app bundle, so there is no second package and no daemon to set up.
+## What the cask installs
 
-Apple Silicon, macOS 12 or newer. There is no universal binary, so the cask
-refuses to install on an Intel Mac rather than leaving you with an app that
-downloads and will not open.
+`ThinkWatch Lite.app` in `/Applications`. The gateway, ThinkWatch Core, is
+part of the app bundle, so no second package or background service has to be
+installed.
 
-## Why the install removes a quarantine attribute
+The app is built for Apple silicon only. There is no universal binary, so the
+cask requires an arm64 Mac and refuses to install on an Intel Mac instead of
+installing an app that cannot run there.
 
-The app is signed with the project's own self-signed certificate, not by a
-registered Apple developer — that is a paid, renewed-yearly account and nobody
-has taken it on. The certificate does not get the app past Gatekeeper. What it
-does is give every release the same signer, so `brew upgrade` can tell the new
-version comes from the same place as the old one and doesn't warn that the
-signer changed.
+## Code signing and the quarantine attribute
 
-macOS quarantines anything downloaded from the internet and refuses to open an
-app it cannot attribute to a registered developer. Since macOS 15 the
-Control-click bypass is gone; what is left is System Settings › Privacy &
-Security › Open Anyway, once per install, or removing the attribute. The cask's
-`postflight` removes it:
+The app is signed with the project's self-signed certificate, not with an
+Apple Developer ID. The certificate does not satisfy Gatekeeper. It gives
+every release the same signer, so that `brew upgrade` recognizes a new version
+as coming from the same source as the installed one and does not report a
+changed signer.
+
+macOS quarantines files downloaded from the internet and does not open an app
+that is not signed by a registered Apple developer. Since macOS 15, opening
+the app with a Control-click no longer bypasses this check; the remaining
+options are System Settings › Privacy & Security › Open Anyway, once per
+installation, or removing the quarantine attribute. The cask's `postflight`
+step removes the attribute:
 
 ```bash
 xattr -dr com.apple.quarantine "/Applications/ThinkWatch Lite.app"
 ```
 
-That is the whole of what this tap does beyond copying the app out of its disk
-image. If you would
-rather not delegate it, skip the cask: download the build from the
-[releases page](https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases),
-check its sha256 against the one published beside it, and run that command
-yourself.
+Apart from copying the app out of its disk image, this is the only action the
+cask performs. To install without it, download
+`ThinkWatch-Lite-<version>-arm64.dmg` from the
+[releases page](https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/latest),
+compare it with the SHA-256 checksum published beside it, and run the command
+above.
 
-The cask's checksum is not copied from that published file. It is the hash of
-the bytes the bump job downloaded, and the job fails if the two disagree —
-a checksum published next to the file it describes proves nothing on its own.
+The checksum in the cask is not copied from that published file. It is
+computed from the disk image that the update job downloads, and the update
+fails if the two checksums differ: a checksum published next to the file it
+describes does not verify that file on its own.
 
-## Updating
+## Updates
 
 ```bash
 brew update && brew upgrade --cask thinkwatch-lite
 ```
 
-An app installed this way does not update itself. Homebrew moves the app into
-`/Applications` and records the version it put there; an app that replaced its
-own bundle would leave that record pointing at a version that is no longer on
-disk, and the next `brew upgrade` would write the old one back over it.
+An app installed with Homebrew does not update itself. Homebrew records the
+version it placed in `/Applications`; if the app replaced its own bundle, that
+record would point to a version that is no longer on disk, and the next
+`brew upgrade` would install the older version over the newer one.
 
-So when a new version exists, the app opens a window with this command and a
-button to copy it. It checks this tap rather than the release page to decide:
-the window appears only once the cask here carries the new version, which the
-bump job picks up within the hour. Before that, the command would have nothing
-to install.
+The app checks this tap instead of the release page, so a new version is
+reported only after the cask here carries it. The app reports it in a
+notification, in its menu and in Settings; each of these opens a window with
+the command above and a button that copies it. Every ThinkWatch Lite release
+updates the cask as soon as it is published; an hourly job in this repository
+serves as the fallback.
 
 `brew update` is part of the command because `brew upgrade` refreshes taps on
-its own at most once a day (`HOMEBREW_AUTO_UPDATE_SECS`); without it, a
-day-old copy of this tap would answer that the latest version is already
+its own at most once a day (`HOMEBREW_AUTO_UPDATE_SECS`). Without it, an
+outdated copy of this tap would report that the latest version is already
 installed.
 
-## Uninstalling
+## Uninstallation
+
+Before the cask is uninstalled, Settings › Full uninstall in the app restores every
+connected client and turns off launch at login. Removing the app alone does
+neither, which leaves connected clients pointed at a port where nothing is
+listening.
 
 ```bash
 brew uninstall --cask thinkwatch-lite
 ```
 
-That removes the app and leaves `~/.thinkwatch` alone — the config, the traffic
-database and the upstream keys are yours, not the app's. To remove those too:
+This quits and removes the app, and keeps `~/.thinkwatch`, which holds the
+configuration with the upstream keys, the request history and the keys of
+remote connections. To remove that directory and the app's other files as
+well:
 
 ```bash
 brew uninstall --zap --cask thinkwatch-lite
 ```
 
-`--zap` moves them to the Trash rather than deleting them.
+`--zap` moves those files to the Trash rather than deleting them.
