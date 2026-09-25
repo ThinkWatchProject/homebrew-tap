@@ -83,7 +83,7 @@ installed.
 
 ## Uninstallation
 
-Before the cask is uninstalled, Settings › Uninstall in the app restores every
+Before the cask is uninstalled, Settings › Full uninstall in the app restores every
 connected client and turns off launch at login. Removing the app alone does
 neither, which leaves connected clients pointed at a port where nothing is
 listening.
