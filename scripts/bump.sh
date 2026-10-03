@@ -28,7 +28,7 @@ then
   exit 0
 fi
 
-ASSET="ThinkWatch-Lite-${VERSION}-arm64.dmg"
+ASSET="ThinkWatch-Lite-${VERSION}-darwin-arm64.dmg"
 TMP=$(mktemp -d)
 # shellcheck disable=SC2064  # expand now: this is the directory to remove
 trap "rm -rf '${TMP}'" EXIT

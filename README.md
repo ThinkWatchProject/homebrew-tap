@@ -27,8 +27,9 @@ is the only action it takes besides copying the app:
 xattr -dr com.apple.quarantine "/Applications/ThinkWatch Lite.app"
 ```
 
-To do this step by hand instead, download `ThinkWatch-Lite-<version>-arm64.dmg`
-from the [releases page](https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/latest),
+To do this step by hand instead, download
+`ThinkWatch-Lite-<version>-darwin-arm64.dmg` from the
+[releases page](https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/latest),
 check it against the published SHA-256 checksum and run the command above.
 Otherwise, System Settings › Privacy & Security › Open Anyway is required once
 per installation; since macOS 15, Control-click no longer bypasses the check.

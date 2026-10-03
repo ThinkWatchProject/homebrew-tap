@@ -25,7 +25,7 @@ xattr -dr com.apple.quarantine "/Applications/ThinkWatch Lite.app"
 ```
 
 如需手动完成这一步，可从[发布页面](https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/latest)
-下载 `ThinkWatch-Lite-<版本>-arm64.dmg`，与发布的 SHA-256 校验和核对后执行上面
+下载 `ThinkWatch-Lite-<版本>-darwin-arm64.dmg`，与发布的 SHA-256 校验和核对后执行上面
 的命令。否则每次安装后需在「系统设置 › 隐私与安全性」中选择「仍要打开」；自
 macOS 15 起，按住 Control 键点按打开已无法绕过这项检查。
 
