@@ -1,6 +1,6 @@
 cask "thinkwatch-lite" do
-  version "2026.10.19"
-  sha256 "dd78c04422bbf16933221d949daa38de4d02d22f9fed436da0326807a7da5126"
+  version "2026.10.20"
+  sha256 "615247011ff4b956630f2fbbc52bd5e6509b7db9289079413607bcce5510cdc2"
 
   url "https://github.com/ThinkWatchProject/ThinkWatch-Lite/releases/download/v#{version}/ThinkWatch-Lite-#{version}-darwin-arm64.dmg"
   name "ThinkWatch Lite"
